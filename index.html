@@ -47,28 +47,35 @@
       <div class="workspace">
         <!-- Live Monitor Cockpit -->
         <main class="monitor-main" aria-label="Live Performance Monitor">
+          <div id="ble-notice" class="ble-notice hidden" role="status">
+            <span id="ble-notice-text"></span>
+            <a id="ble-standalone-link" href="#" target="_blank" rel="noopener noreferrer" class="notice-link hidden">
+              Open Standalone Tab
+            </a>
+          </div>
           <div class="monitor-grid">
-            <!-- 1. 500m Split Pace -->
+            <!-- 1. Distance -->
             <section class="metric-card">
               <div class="metric-head">
                 <div class="metric-title-group">
                   <div class="icon-box icon-cyan" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="m12 14 4-4"></path>
-                      <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
+                      <circle cx="6" cy="19" r="3"></circle>
+                      <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path>
+                      <circle cx="18" cy="5" r="3"></circle>
                     </svg>
                   </div>
                   <div>
-                    <h3>500m Split Pace</h3>
-                    <p>Instantaneous velocity</p>
+                    <h3>Distance</h3>
+                    <p>Session meters rowed</p>
                   </div>
                 </div>
-                <span class="metric-sub-right" id="val-avg-pace">Avg --:--.-</span>
+                <span class="metric-sub-right" id="val-strokes">0 strokes</span>
               </div>
 
               <div class="metric-value-row">
-                <span class="metric-value text-cyan" id="val-pace">--:--.-</span>
-                <span class="metric-unit">/500m</span>
+                <span class="metric-value text-cyan" id="val-distance">0</span>
+                <span class="metric-unit">m</span>
               </div>
 
               <div class="metric-foot">
@@ -77,7 +84,36 @@
               </div>
             </section>
 
-            <!-- 2. Heart Rate -->
+            <!-- 2. Elapsed Time -->
+            <section class="metric-card">
+              <div class="metric-head">
+                <div class="metric-title-group">
+                  <div class="icon-box icon-emerald" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Elapsed Time</h3>
+                    <p>Active workout clock</p>
+                  </div>
+                </div>
+                <span class="metric-sub-right" id="val-session-status">Stopped</span>
+              </div>
+
+              <div class="metric-value-row">
+                <span class="metric-value text-emerald" id="val-elapsed">00:00</span>
+                <span class="metric-unit">mm:ss</span>
+              </div>
+
+              <div class="metric-foot">
+                <span id="val-avg-watts">Avg -- W</span>
+                <span id="val-avg-spm">Avg -- spm</span>
+              </div>
+            </section>
+
+            <!-- 3. Heart Rate -->
             <section class="metric-card">
               <div class="metric-head">
                 <div class="metric-title-group">
@@ -109,26 +145,27 @@
               </div>
             </section>
 
-            <!-- 3. Power Output -->
+            <!-- 4. 500m Split Pace -->
             <section class="metric-card">
               <div class="metric-head">
                 <div class="metric-title-group">
                   <div class="icon-box icon-amber" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+                      <path d="m12 14 4-4"></path>
+                      <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
                     </svg>
                   </div>
                   <div>
-                    <h3>Power Output</h3>
-                    <p>Drive mechanical work</p>
+                    <h3>500m Split Pace</h3>
+                    <p>Instantaneous velocity</p>
                   </div>
                 </div>
-                <span class="metric-sub-right" id="val-avg-watts">Avg -- W</span>
+                <span class="metric-sub-right" id="val-avg-pace">Avg --:--.-</span>
               </div>
 
               <div class="metric-value-row">
-                <span class="metric-value" id="val-watts">--</span>
-                <span class="metric-unit">W</span>
+                <span class="metric-value" id="val-pace">--:--.-</span>
+                <span class="metric-unit">/500m</span>
               </div>
 
               <div class="metric-foot">
@@ -136,65 +173,34 @@
                 <span id="val-efficiency">Efficiency -- W/bpm</span>
               </div>
             </section>
-
-            <!-- 4. Stroke Rate -->
-            <section class="metric-card">
-              <div class="metric-head">
-                <div class="metric-title-group">
-                  <div class="icon-box icon-emerald" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-                      <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-                      <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3>Stroke Rate</h3>
-                    <p>Cadence &amp; rhythm</p>
-                  </div>
-                </div>
-                <span class="metric-sub-right" id="val-strokes">0 strokes</span>
-              </div>
-
-              <div class="metric-value-row">
-                <span class="metric-value text-emerald" id="val-spm">--</span>
-                <span class="metric-unit">spm</span>
-              </div>
-
-              <div class="metric-foot">
-                <span id="val-avg-spm">Avg -- spm</span>
-                <span id="val-hrv">HRV -- ms</span>
-              </div>
-            </section>
           </div>
 
           <!-- Bottom Compact Totals Bar -->
           <div class="totals-strip">
             <div class="total-tile">
-              <svg viewBox="0 0 24 24" class="total-icon text-cyan" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="6" cy="19" r="3"></circle>
-                <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path>
-                <circle cx="18" cy="5" r="3"></circle>
-              </svg>
-              <div>
-                <div class="total-label">Distance</div>
-                <div class="total-val" id="val-distance">0 m</div>
-              </div>
-            </div>
-
-            <div class="total-tile">
-              <svg viewBox="0 0 24 24" class="total-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-              <div>
-                <div class="total-label">Elapsed Time</div>
-                <div class="total-val" id="val-elapsed">00:00</div>
-              </div>
-            </div>
-
-            <div class="total-tile">
               <svg viewBox="0 0 24 24" class="total-icon text-amber" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+              </svg>
+              <div>
+                <div class="total-label">Power Output</div>
+                <div class="total-val" id="val-watts">-- W</div>
+              </div>
+            </div>
+
+            <div class="total-tile">
+              <svg viewBox="0 0 24 24" class="total-icon text-emerald" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+                <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+                <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+              </svg>
+              <div>
+                <div class="total-label">Stroke Rate</div>
+                <div class="total-val" id="val-spm">-- spm</div>
+              </div>
+            </div>
+
+            <div class="total-tile">
+              <svg viewBox="0 0 24 24" class="total-icon text-cyan" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
               </svg>
               <div>
@@ -204,12 +210,12 @@
             </div>
 
             <div class="total-tile">
-              <svg viewBox="0 0 24 24" class="total-icon text-emerald" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="total-icon text-rose" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
               </svg>
               <div>
-                <div class="total-label">Session Status</div>
-                <div class="total-val" id="val-session-status">Stopped</div>
+                <div class="total-label">HRV (RMSSD)</div>
+                <div class="total-val" id="val-hrv">-- ms</div>
               </div>
             </div>
           </div>

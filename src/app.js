@@ -237,8 +237,14 @@ function parseFtmsRowerData(value) {
 }
 
 // UI Rendering
+let bleNoticeTimeoutId = null;
+
 function showBleNotice(message, showStandaloneLink = false) {
   if (!el.bleNotice || !el.bleNoticeText || !el.bleStandaloneLink) return;
+  if (bleNoticeTimeoutId !== null) {
+    window.clearTimeout(bleNoticeTimeoutId);
+    bleNoticeTimeoutId = null;
+  }
   if (!message) {
     el.bleNotice.classList.add('hidden');
     return;
@@ -251,6 +257,9 @@ function showBleNotice(message, showStandaloneLink = false) {
   } else {
     el.bleStandaloneLink.classList.add('hidden');
   }
+  bleNoticeTimeoutId = window.setTimeout(() => {
+    el.bleNotice?.classList.add('hidden');
+  }, 6000);
 }
 
 function renderDevices() {
@@ -367,7 +376,7 @@ function renderMetrics() {
     });
   }
 
-  if (el.valWatts) el.valWatts.textContent = state.watts !== null ? String(state.watts) : '--';
+  if (el.valWatts) el.valWatts.textContent = state.watts !== null ? `${state.watts} W` : '-- W';
   if (el.valAvgWatts) el.valAvgWatts.textContent = avgWatts !== null ? `Avg ${avgWatts} W` : 'Avg -- W';
   if (el.valPeakWatts) {
     el.valPeakWatts.textContent = state.peakWatts > 0 ? `Peak ${state.peakWatts} W` : 'Peak -- W';
@@ -384,12 +393,12 @@ function renderMetrics() {
   const sessionDistance = Math.max(0, Math.round(state.rawDistance - state.offsetDistance));
   const sessionCalories = Math.max(0, Math.round(state.rawCalories - state.offsetCalories));
 
-  if (el.valSpm) el.valSpm.textContent = state.spm !== null ? String(state.spm) : '--';
+  if (el.valSpm) el.valSpm.textContent = state.spm !== null ? `${state.spm} spm` : '-- spm';
   if (el.valStrokes) el.valStrokes.textContent = `${sessionStrokes} strokes`;
   if (el.valAvgSpm) el.valAvgSpm.textContent = `Avg ${avgSpm} spm`;
-  if (el.valHrv) el.valHrv.textContent = state.hrvMs !== null ? `HRV ${state.hrvMs} ms` : 'HRV -- ms';
+  if (el.valHrv) el.valHrv.textContent = state.hrvMs !== null ? `${state.hrvMs} ms` : '-- ms';
 
-  if (el.valDistance) el.valDistance.textContent = `${sessionDistance.toLocaleString('en-US')} m`;
+  if (el.valDistance) el.valDistance.textContent = sessionDistance.toLocaleString('en-US');
   if (el.valElapsed) el.valElapsed.textContent = formatDuration(state.elapsedSeconds);
   if (el.valCalories) el.valCalories.textContent = `${sessionCalories} kcal`;
   if (el.valSessionStatus) {
@@ -852,9 +861,14 @@ async function init() {
     }
   });
 
+  el.bleNotice?.addEventListener('click', (ev) => {
+    if (ev.target !== el.bleStandaloneLink) {
+      el.bleNotice?.classList.add('hidden');
+    }
+  });
+
   const bt = navigator.bluetooth;
   if (!bt) {
-    showBleNotice('Web Bluetooth is not supported in this browser. Use Chrome or Edge over HTTPS.');
     renderDevices();
     renderMetrics();
     return;
@@ -863,10 +877,6 @@ async function init() {
   const policy = document.permissionsPolicy || document.featurePolicy;
   if (policy && typeof policy.allowsFeature === 'function' && !policy.allowsFeature('bluetooth')) {
     state.blePolicyBlocked = true;
-    showBleNotice(
-      'Bluetooth is restricted inside this embedded preview frame. Open in a standalone tab to connect your devices.',
-      true
-    );
   }
 
   if (bt.getDevices) {
