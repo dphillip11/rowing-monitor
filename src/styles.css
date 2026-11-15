@@ -156,18 +156,6 @@ body {
   overflow: hidden;
 }
 
-/* Devices Left Rail */
-.devices-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background: var(--bg-rail);
-  border-right: 1px solid var(--border-hairline);
-  min-height: 0;
-  overflow: hidden;
-}
-
 .devices-header {
   display: flex;
   align-items: center;
@@ -370,6 +358,7 @@ body {
 
 /* Live Monitor Cockpit */
 .monitor-main {
+  width: 100vw;
   position: relative;
   display: flex;
   flex-direction: column;
