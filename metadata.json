@@ -1,0 +1,6 @@
+{
+  "name": "RowPulse",
+  "description": "Real-time heart rate monitor and rowing machine performance telemetry dashboard with Bluetooth Low Energy device discovery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
